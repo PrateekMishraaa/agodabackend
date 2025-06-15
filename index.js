@@ -1,33 +1,38 @@
-import express from "express"
-import dotenv from "dotenv"
-dotenv.config()
-const PORT = process.env.PORT || 2000
-const app = express()
-import mongoose from "mongoose"
-import User from "./routes/Users.js"
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import UserRoutes from "./routes/Users.js";
 
+dotenv.config();
 
-mongoose.connect(process.env.MONGOURI)
-.then(()=>{
-    console.log("Db connected thanks to Mr Prateek")
-})
-.catch(()=>{
-    console.log("db disconnected bc riya ki maa ki 1008 baar")
-})
-app.use(express.json())
-app.use("/api",User)
-app.get("/",(req,res)=>{
-    console.log("arpita")
-    res.send("Trivedi")
-})
+const app = express();
+const PORT = process.env.PORT || 2000;
 
+// Middleware
+app.use(express.json());
 
+// Routes
+app.use("/api/users", UserRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the API!");
+});
 
+// MongoDB Connection
+mongoose
+  .connect(process.env.MONGOURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("✅ MongoDB connected successfully.");
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection failed:", err.message);
+  });
 
-
-
-
-
-
-app.listen(PORT,()=>console.log(`Server is starting at Port ${PORT}`))
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
+// `px8FkCd8RuLBkcK5`
